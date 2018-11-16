@@ -1,0 +1,52 @@
+parameters:
+#    application_tools.example.class: Application\ToolsBundle\Example
+
+services:
+#    application_tools.example:
+#        class: %application_tools.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    application_tools.type.entity_hidden:
+        class: Application\ToolsBundle\Form\Type\EntityHiddenType
+        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: entity_hidden }
+    
+    application_tools.type.dependent_filtered_entity:
+        class: Application\ToolsBundle\Form\Type\DependentFilteredEntityType
+        arguments: ["@doctrine", "@property_accessor"]
+        tags:
+            - { name: form.type, alias: apptools_dependent_filtered_entity }
+
+    application_tools.dependent_filtered_entity_subscriber:
+        class: Application\ToolsBundle\Form\EventListener\DependentFilteredEntitySubscriber
+        arguments: ["@service_container", "@property_accessor"]
+    
+    application_tools.type.cloak_entity:
+        class: Application\ToolsBundle\Form\Type\CloakEntityType
+        arguments: ["@doctrine", "@property_accessor"]
+        tags:
+            - { name: form.type, alias: apptools_cloak_entity }
+
+    application_tools.type.formfiel_cloaker:
+        class: Application\ToolsBundle\Form\Type\FormFieldCloakerType
+        tags:
+            - { name: form.type, alias: apptools_formfield_cloaker }
+    
+    application_tools.type.geo_location:
+        class: Application\ToolsBundle\Form\Type\GeoLocationType
+#        arguments: ["@doctrine.orm.entity_manager"]
+        tags:
+            - { name: form.type, alias: geo_location }
+
+    application_tools.type.editable_combobox:
+        class: Application\ToolsBundle\Form\Type\EditableComboboxType
+        tags:
+            - { name: form.type, alias: apptools_editable_combobox }
+   
+#
+# FORM RELATED SERVICES
+#
+    app.form_extension.previewfile:
+        class: Application\ToolsBundle\Form\Extension\PreviewFileTypeExtension
+        tags:
+            - { name: form.type_extension, alias: file }

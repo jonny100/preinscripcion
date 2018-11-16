@@ -1,0 +1,49 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Espacios
+ *
+ * @ORM\Table(name="espacios", indexes={@ORM\Index(name="fk_espacios_tipo_espacios1_idx", columns={"tipo_espacios_id"})})
+ * @ORM\Entity
+ */
+class Espacios
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=200, nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=200, nullable=true)
+     */
+    private $descripcion;
+
+    /**
+     * @var \TipoEspacios
+     *
+     * @ORM\ManyToOne(targetEntity="TipoEspacios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tipo_espacios_id", referencedColumnName="id")
+     * })
+     */
+    private $tipoEspacios;
+
+
+}

@@ -1,0 +1,15 @@
+services:
+#    admin_admin.form.type.time_picker:        
+#        class: Admin\AdminBundle\Form\Type\TimePickerType
+#        arguments: [ "@sonata.core.date.moment_format_converter", @service_container]
+#        tags: 
+#            - { name: form.type, alias: sonata_type_time_picker}
+            
+#    admin_admin.date.moment_format_converter:
+#        class: Admin\AdminBundle\Date\MomentFormatConverter
+
+    admin_admin.form.type.time_picker:
+        class: AppBundle\Form\Type\TimePickerType
+        arguments: [ "@admin_admin.date.moment_format_converter", @service_container]            
+        tags: 
+            - { name: form.type, alias: sonata_type_time_picker}

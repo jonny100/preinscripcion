@@ -1,0 +1,48 @@
+application_tools:
+    dependent_filtered_entities:
+        provincias_by_paises:
+            form_options:
+                entity_alias: provincias_by_paises
+                class: AppBundle:Provincias
+                property: nombre
+                field_name: provincias
+                parent_property: paises
+                parent_field: paises
+                no_result_msg: 'Sin resultados'
+                empty_value: ' '
+            search_options:
+                role: ROLE_USER
+                order_property: nombre
+                order_direction: ASC
+        dptos_by_provincia:
+            form_options:
+                entity_alias: dptos_by_provincia
+                class: AppBundle:DptosPartidos
+                property: nombre
+                field_name: dptosPartidos
+                parent_property: provincias
+                parent_field: provincias
+                no_result_msg: 'Sin resultados'
+                empty_value: ' '
+            search_options:
+                role: ROLE_USER
+                order_property: nombre
+                order_direction: ASC
+        localidad_by_dptos:
+            form_options:
+                entity_alias: localidad_by_dptos
+                class: AppBundle:Localidades
+                property: nombre
+                field_name: localidades
+                parent_property: dptosPartidos
+                parent_field: dptosPartidos
+                no_result_msg: 'Sin resultados'
+                empty_value: ' '
+            search_options:
+                role: ROLE_USER
+                order_property: nombre
+                order_direction: ASC
+
+        
+       
+

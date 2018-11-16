@@ -1,0 +1,51 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * DptosPartidos
+ *
+ * @ORM\Table(name="dptos_partidos", indexes={@ORM\Index(name="fk_dptos_partidos_provincias1_idx", columns={"provincias_id"})})
+ * @ORM\Entity
+ */
+class DptosPartidos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=60, nullable=false)
+     */
+    private $nombre;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="estado", type="string", length=1, nullable=false)
+     */
+    private $estado;
+
+    /**
+     * @var \Provincias
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Provincias")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="provincias_id", referencedColumnName="id")
+     * })
+     */
+    private $provincias;
+
+
+}

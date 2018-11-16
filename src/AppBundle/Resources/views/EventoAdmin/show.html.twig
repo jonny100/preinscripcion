@@ -1,0 +1,44 @@
+{% extends 'SonataAdminBundle:CRUD:base_show.html.twig' %}
+
+{% block title %}
+    {{ object.getNombre }}
+{% endblock %}
+
+{% block navbar_title %}
+
+{% endblock %}
+
+{%- block actions -%}
+
+{%- endblock -%}
+
+
+{% block show %}
+    {% if object.eventoestados.HabilitadaPreinscripcion %}
+        {% if object.getHtml|length > 0 %}
+
+            {{ object.getHtml|raw  }}
+
+            <div class="sonata-ba-form-actions well well-small form-actions stuck" style="width: 100%;">
+                <a href="{{ path('admin_app_evento_preinscriptos_create', {'id': object.id}) }}" class="btn btn-sm btn-warning view_link" title="Preinscribirse">
+                    <i class="glyphicon glyphicon-user"></i>
+                    Preinscribirse al Evento
+                </a>
+            </div>
+        {% else %}
+            {{ parent() }}
+
+            <div class="sonata-ba-form-actions well well-small form-actions stuck" style="width: 100%;">
+                <a href="{{ path('admin_app_evento_preinscriptos_create', {'id': object.id}) }}" class="btn btn-sm btn-warning view_link" title="Preinscribirse">
+                    <i class="glyphicon glyphicon-user"></i>
+                    Preinscribirse al Evento
+                </a>
+            </div>
+        {% endif %}
+    {% else %}
+        Evento no Disponible
+    {% endif %}
+
+{% endblock %}
+
+

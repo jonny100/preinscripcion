@@ -1,0 +1,49 @@
+sonata_admin:
+    title: 'Preinscripcion'
+    title_logo: bundles/app/images/EIE-Logo.png
+
+    options:
+        use_select2: false  # disable select2
+    
+#    security:
+#        handler: sonata.admin.security.handler.role
+    
+    #persist_filters: true
+    
+    templates:
+        layout: standard_layout.html.twig
+#        dashboard: AppBundle:ElementosAdmin:list.html.twig
+    
+#    assets:
+#        stylesheets:
+#            - bundles/sonatacore/vendor/bootstrap/dist/css/bootstrap.min.css
+#            - bundles/sonatacore/vendor/components-font-awesome/css/font-awesome.min.css
+#            - bundles/sonatacore/vendor/ionicons/css/ionicons.min.css
+#            - bundles/sonataadmin/vendor/admin-lte/dist/css/AdminLTE.min.css
+#            - bundles/sonataadmin/vendor/admin-lte/dist/css/skins/skin-red.min.css
+#            - bundles/sonataadmin/vendor/iCheck/skins/square/blue.css
+#
+#            - bundles/sonatacore/vendor/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css
+#
+#            - bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css
+#
+#            - bundles/sonatacore/vendor/select2/select2.css
+#            - bundles/sonatacore/vendor/select2-bootstrap-css/select2-bootstrap.min.css
+#
+#            - bundles/sonataadmin/vendor/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css
+#
+#            - bundles/sonataadmin/css/styles.css
+#            - bundles/sonataadmin/css/layout.css
+#            - bundles/sonataadmin/css/tree.css
+
+
+    
+#    dashboard:
+#        groups:
+#            admin:
+#                label:  'Operaciones'
+#                items:  ~
+
+
+    
+    

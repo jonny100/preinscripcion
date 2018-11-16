@@ -1,0 +1,59 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * MovimientosElementos
+ *
+ * @ORM\Table(name="movimientos_elementos", indexes={@ORM\Index(name="fk_movimientos_elementos_espacios1_idx", columns={"espacios_id"}), @ORM\Index(name="fk_movimientos_elementos_elementos1_idx", columns={"elementos_id"})})
+ * @ORM\Entity
+ */
+class MovimientosElementos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha", type="datetime", nullable=true)
+     */
+    private $fecha;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="motivo", type="string", length=500, nullable=true)
+     */
+    private $motivo;
+
+    /**
+     * @var \Espacios
+     *
+     * @ORM\ManyToOne(targetEntity="Espacios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="espacios_id", referencedColumnName="id")
+     * })
+     */
+    private $espacios;
+
+    /**
+     * @var \Elementos
+     *
+     * @ORM\ManyToOne(targetEntity="Elementos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="elementos_id", referencedColumnName="id")
+     * })
+     */
+    private $elementos;
+
+
+}

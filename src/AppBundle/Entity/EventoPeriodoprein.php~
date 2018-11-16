@@ -1,0 +1,49 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * EventoPeriodoprein
+ *
+ * @ORM\Table(name="evento_periodoprein", indexes={@ORM\Index(name="fk_evento_periodoprein_evento_idx", columns={"evento_id"})})
+ * @ORM\Entity
+ */
+class EventoPeriodoprein
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_inicio", type="date", nullable=true)
+     */
+    private $fechaInicio;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_fin", type="date", nullable=true)
+     */
+    private $fechaFin;
+
+    /**
+     * @var \Evento
+     *
+     * @ORM\ManyToOne(targetEntity="Evento")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="evento_id", referencedColumnName="id")
+     * })
+     */
+    private $evento;
+
+
+}

@@ -1,0 +1,303 @@
+{% block apptools_dependent_filtered_entity_widget %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
+    {{ block('choice_widget') }}
+    {% set loaderid = [form.vars.id, '_loader'] | join('') %}
+    <img src='{{ asset('bundles/applicationtools/images/ajax-loader.gif' ) }}' id='{{ loaderid }}' style='display: none;'>
+    <script type="text/javascript">
+        jQuery(function(){
+
+            jQuery("select#{{ form.parent.offsetGet( parent_field ).vars.id }}").change( function() {
+                var selected_index = {{ value ? value : 0 }};
+                jQuery("#{{ loaderid }}").show();
+                jQuery.ajax({
+                    type: "POST",
+                    data: {
+                        parent_id: jQuery(this).val(),
+                        entity_alias: "{{ entity_alias }}",
+                        empty_value: "{{ empty_value }}"
+                    },
+                    url:"{{ path('application_tools_dependent_filtered_entity') }}",
+                    success: function(msg){
+                        if (msg != ''){
+                            jQuery("select#{{ form.vars.id }}").html(msg).show();
+                            jQuery.each(jQuery("select#{{ form.vars.id }} option"), function (index, option){
+                                if (jQuery(option).val() == selected_index)
+                                    jQuery(option).prop('selected', true);
+                            })
+                            jQuery("select#{{ form.vars.id }}").trigger('change');
+                            jQuery("#{{ loaderid }}").hide();
+                        } else {
+                            jQuery("select#{{ form.vars.id }}").html('<em>{{ no_result_msg|trans() }}</em>');
+                            jQuery("#{{ loaderid }}").hide();
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError){
+                    jQuery('html').html(xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block apptools_cloak_entity_widget %}
+    {% set attr = attr|merge({'class': attr.class|default('') ~ ' form-control'}) %}
+    {{ block('choice_widget') }}
+    <script type="text/javascript">
+      {% set main_form_name = id|slice(0, id|length - name|length) %}
+      var cloak_{{ form.vars.id }}_data = {{ form.vars.cloak|raw }};
+
+      function cloak_{{ form.vars.id }}_manage(nvalue) {
+        var data = cloak_{{ form.vars.id }}_data;
+        var show_list = {};
+        var hide_list = {};
+
+        if(data.hasOwnProperty(nvalue)) {
+          show_list = data[nvalue]['show'];
+          hide_list = data[nvalue]['hide'];
+        }
+        else {
+          if(data.hasOwnProperty('*')) {
+            show_list = data['*']['show'];
+            hide_list = data['*']['hide'];
+          }
+        }
+        
+        for(id in show_list) {
+          {# jQuery("#{{ main_form_name }}"+show_list[id]).parent().parent().show("scale", 100); #}
+          jQuery("#{{ main_form_name }}"+show_list[id]).parent().parent().slideDown();
+        }
+        for(id in hide_list) {
+          jQuery("#{{ main_form_name }}"+hide_list[id]).parent().parent().slideUp();
+        }
+      }
+
+      jQuery(function(){
+        jQuery("#{{ form.vars.id }}").change( function() {
+            cloak_{{ form.vars.id }}_manage(this.value);
+        });
+        cloak_{{ form.vars.id }}_manage(jQuery("#{{ form.vars.id }}").val());
+      });
+    </script>
+{% endblock apptools_cloak_entity_widget %}
+
+{% block apptools_formfield_cloaker_widget %}
+    {{ block('hidden_widget') }}
+
+    <script type="text/javascript">
+      {% set main_form_name = id|slice(0, id|length - name|length) %}
+      {% set field_id = form.vars.id %}
+      var cloak_{{ field_id }}_data = {{ form.vars.cloak_options|raw }};
+
+      function cloak_{{ field_id }}_manage(nvalue) {
+        var data = cloak_{{ field_id }}_data;
+        var show_list = {};
+        var hide_list = data.fields;
+
+        if(data.map.hasOwnProperty(nvalue)) {
+          show_list = data.map[nvalue];
+        }
+        
+        {#alert('cloak_{{ field_id }}_manage:'+nvalue);#}
+        {% set selector_tpl = form.vars.selector|replace({'%form_name%': main_form_name}) %}
+        for(id in show_list) {
+          sel = '{{ selector_tpl|raw }}'.replace("%field_id%", show_list[id]);
+          obj = eval(sel);
+          obj.{{ form.vars.show_effect }};
+        }
+        for(id in hide_list) {
+          if(jQuery.inArray(hide_list[id], show_list) == "-1") {
+            sel = '{{ selector_tpl|raw }}'.replace("%field_id%", hide_list[id]);
+            obj = eval(sel);
+            obj.{{ form.vars.hide_effect }};
+          }
+        }
+      }
+
+      jQuery(function(){
+        trigger_field = "#{{ main_form_name }}{{ form.vars.trigger_field }}";
+        
+        {% if form.vars.ischeckbox %} {# use icheck methods #}
+          jQuery(trigger_field).on('ifChecked', function(event) {
+            cloak_{{ form.vars.id }}_manage('T');
+            });
+          jQuery(trigger_field).on('ifUnchecked', function(event) {
+            cloak_{{ form.vars.id }}_manage('F');
+            });
+          // Call manage after page load
+          if(jQuery(trigger_field).is(':checked')) {
+            cloak_{{ form.vars.id }}_manage('T');
+          }
+          else {
+            cloak_{{ form.vars.id }}_manage('F');
+          }
+        {% else %}
+          jQuery(trigger_field).change( function() {
+              cloak_{{ form.vars.id }}_manage(this.value);
+          });
+          // Call manage after page load
+          cloak_{{ form.vars.id }}_manage(jQuery(trigger_field).val());
+        {% endif %}
+      });
+    </script>
+{% endblock apptools_formfield_cloaker_widget %}
+
+{% block geo_location_widget %}
+  {{ block('form_widget') }}
+  <div id="map" style="height: 320px;"></div>
+
+  <script type="text/javascript">
+  //jQuery(function() {  NO DESCOMENTAR SE NECESITA Q map SEA GLOBAL
+    var def_lat = '{{ form.vars.default_lat }}';
+    var def_lng = '{{ form.vars.default_lng }}';
+    var def_zoom = '{{ form.vars.default_zoom }}';
+    var lat = '{{ form.offsetGet("geo_lat").vars.value }}';
+    var lng = '{{ form.offsetGet("geo_lng").vars.value }}';
+    var zoom = '{{ form.offsetGet("geo_zoom").vars.value }}';
+    
+    if(lat == '' || lng == '') {
+      lat = def_lat;
+      lng = def_lng;
+    }
+    if(zoom == ''){
+     zoom = def_zoom
+    }
+    // create a map in the "map" div, set the view to a given place and zoom
+    var map = L.map('map', {center: [lat, lng], zoom: zoom});
+
+    //add an OpenStreetMap tile layer
+    var ggl = new L.Google('ROADMAP');
+    map.addLayer(ggl);
+
+ 
+
+
+//   var osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+//    map.addControl(new L.Control.Layers( {'OSM':osm, 'Google':ggl}, {}));
+
+    {% if not form.vars.readonly %}
+    var marker_draggable = true;
+    {% else %}
+    var marker_draggable = false;
+    {% endif %}
+    // add a marker in the given location, attach some popup content to it and open the popup
+    var marker = L.marker([lat, lng], {
+                          title:'{{ form.vars.marker_title }}',
+                          draggable: marker_draggable});
+    marker.addTo(map);
+
+    map.on('move', function () {
+		marker.setLatLng(map.getCenter());
+		//console.log(map.getCenter());
+	 });
+
+
+   // Google search box
+
+
+    var GoogleSearch = L.Control.extend({
+      onAdd: function() {
+        var element = document.createElement("input");
+
+        element.id = "searchBox";
+        
+   
+
+    var searchBox = new google.maps.places.SearchBox(element);
+    $("#searchBox").css({ 'line-height': '30px',  'width': '400px'})
+    searchBox.addListener('places_changed', function() {
+      var places = searchBox.getPlaces();
+
+      if (places.length == 0) {
+        return;
+      }
+
+      var group = L.featureGroup();
+
+      places.forEach(function(place) {
+
+        // Create a marker for each place.
+        console.log(places);
+        console.log(place.geometry.location.lat() + " / " + place.geometry.location.lng());
+       
+        marker.setLatLng([
+          place.geometry.location.lat(),
+          place.geometry.location.lng()
+        ]);
+        group.addLayer(marker);
+        
+          // Se actualizan los datos
+          $('#{{ form.offsetGet("geo_lat").vars.id }}').val(place.geometry.location.lat());
+          $('#{{ form.offsetGet("geo_lng").vars.id }}').val(place.geometry.location.lng());
+          {% if form.offsetExists('geo_src') %}
+            $('#{{ form.offsetGet("geo_src").vars.id }}').val('GMAP');
+          {% endif %}
+          {% if form.offsetExists('geo_umod') %}
+            $('#{{ form.offsetGet("geo_umod").vars.id }}').val('1');
+          {% endif %}
+          // se tilda al mover el mapa
+          $("[id*='_geo_umod']:checkbox").iCheck('check');
+          
+          
+      });
+
+      group.addTo(map);
+      map.fitBounds(group.getBounds());
+
+    });	   
+// FIN search Box
+
+        return element;
+      }
+    });
+
+    (new GoogleSearch).addTo(map);
+
+    
+// ZOOM
+map.on( 'zoomend', function() {
+    zoomLevel = map.getZoom();
+    console.log("ZOOM: "+zoomLevel);
+    {% if form.offsetExists('geo_zoom') %}
+        $('#{{ form.offsetGet("geo_zoom").vars.id }}').val( zoomLevel);
+    {% endif %}
+});
+//END ZOOM
+
+    marker.on('dragend', function(e) {
+      var changedPos = e.target.getLatLng();
+      // this.bindPopup(changedPos.toString()).openPopup();
+      $('#{{ form.offsetGet("geo_lat").vars.id }}').val(changedPos.lat);
+      $('#{{ form.offsetGet("geo_lng").vars.id }}').val(changedPos.lng);
+      {% if form.offsetExists('geo_src') %}
+        $('#{{ form.offsetGet("geo_src").vars.id }}').val('GMAP');
+      {% endif %}
+      {% if form.offsetExists('geo_umod') %}
+        $('#{{ form.offsetGet("geo_umod").vars.id }}').val('1');
+      {% endif %}
+          // se tilda al mover el mapa
+          $("[id*='_geo_umod']:checkbox").iCheck('check');
+    });
+    // se verifica que el tilde este activo o no, en caso de false, pone geo_umod en 0, indicando que no se 
+    // tome en cuenta la geolocalizacion del mapa
+    $("[id*='_geo_umod']:checkbox").on('ifChanged',function(event){
+        var check = $(this).iCheck('update')[0].checked;       
+        if(!check){            
+           $('#{{ form.offsetGet("geo_umod").vars.id }}').val('0');
+                     
+        }
+    });
+    
+      $('#searchBox').bind('keypress keydown keyup', function(e){
+       if(e.keyCode == 13) { e.preventDefault(); }
+    });
+    {# fix leafletjs map not shown inside bootstrap tab #}
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+      //e.target // newly activated tab
+      //e.relatedTarget // previous active tab
+      map.invalidateSize(false);
+    });
+ // });
+  </script>
+{% endblock geo_location_widget %}
+{# kate: tab-width 2; #}

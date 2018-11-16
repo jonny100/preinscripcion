@@ -1,0 +1,45 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * ElementosUsuarios
+ *
+ * @ORM\Table(name="elementos_usuarios", indexes={@ORM\Index(name="fk_elementosusuarios_elementos_idx", columns={"elementos_id"}), @ORM\Index(name="fk_elementosusuarios_usuarios_idx", columns={"usuarios_id"})})
+ * @ORM\Entity
+ */
+class ElementosUsuarios
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var \Elementos
+     *
+     * @ORM\ManyToOne(targetEntity="Elementos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="elementos_id", referencedColumnName="id")
+     * })
+     */
+    private $elementos;
+
+    /**
+     * @var \Usuarios
+     *
+     * @ORM\ManyToOne(targetEntity="Usuarios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="usuarios_id", referencedColumnName="id")
+     * })
+     */
+    private $usuarios;
+
+
+}

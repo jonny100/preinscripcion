@@ -1,0 +1,44 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Provincias
+ *
+ * @ORM\Table(name="provincias", indexes={@ORM\Index(name="fk_provincias_paises1_idx", columns={"paises_id"})})
+ * @ORM\Entity
+ */
+class Provincias
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="nombre", type="string", length=60, nullable=true)
+     */
+    private $nombre;
+
+    /**
+     * @var \Paises
+     *
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="NONE")
+     * @ORM\OneToOne(targetEntity="Paises")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="paises_id", referencedColumnName="id")
+     * })
+     */
+    private $paises;
+
+
+}

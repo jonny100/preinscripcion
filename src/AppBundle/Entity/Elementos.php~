@@ -1,0 +1,327 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * Elementos
+ *
+ * @ORM\Table(name="elementos", indexes={@ORM\Index(name="fk_elementos_tipo_elementos_idx", columns={"tipo_elementos_id"}), @ORM\Index(name="fk_elementos_espacios1_idx", columns={"espacios_id"}), @ORM\Index(name="fk_elementos_estados1_idx", columns={"estados_id"})})
+ * @ORM\Entity
+ */
+class Elementos
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="codigo", type="string", length=45, nullable=false)
+     */
+    private $codigo;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=200, nullable=false)
+     */
+    private $descripcion;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion_extra", type="string", length=500, nullable=true)
+     */
+    private $descripcionExtra;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_alta", type="datetime", nullable=true)
+     */
+    private $fechaAlta;
+
+    /**
+     * @var \DateTime
+     *
+     * @ORM\Column(name="fecha_baja", type="datetime", nullable=true)
+     */
+    private $fechaBaja;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="motivo_baja", type="string", length=500, nullable=true)
+     */
+    private $motivoBaja;
+
+    /**
+     * @var \Espacios
+     *
+     * @ORM\ManyToOne(targetEntity="Espacios")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="espacios_id", referencedColumnName="id")
+     * })
+     */
+    private $espacios;
+
+    /**
+     * @var \Estados
+     *
+     * @ORM\ManyToOne(targetEntity="Estados")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="estados_id", referencedColumnName="id")
+     * })
+     */
+    private $estados;
+
+    /**
+     * @var \TipoElementos
+     *
+     * @ORM\ManyToOne(targetEntity="TipoElementos")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="tipo_elementos_id", referencedColumnName="id")
+     * })
+     */
+    private $tipoElementos;
+    
+    /**
+     * @ORM\OneToMany(targetEntity="ElementosUsuarios", mappedBy="elementos", cascade={"all"}, orphanRemoval=true)
+     *
+     */
+    protected $usuarios;
+
+    public function __toString() {
+        return $this->codigo . ' - ' . $this->descripcion;
+    }
+    
+    public function __construct() {
+        $this->fechaAlta = new \DateTime("now");
+        $this->usuarios = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set codigo
+     *
+     * @param string $codigo
+     * @return Elementos
+     */
+    public function setCodigo($codigo)
+    {
+        $this->codigo = $codigo;
+
+        return $this;
+    }
+
+    /**
+     * Get codigo
+     *
+     * @return string 
+     */
+    public function getCodigo()
+    {
+        return $this->codigo;
+    }
+
+    /**
+     * Set descripcion
+     *
+     * @param string $descripcion
+     * @return Elementos
+     */
+    public function setDescripcion($descripcion)
+    {
+        $this->descripcion = $descripcion;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcion
+     *
+     * @return string 
+     */
+    public function getDescripcion()
+    {
+        return $this->descripcion;
+    }
+
+    /**
+     * Set descripcionExtra
+     *
+     * @param string $descripcionExtra
+     * @return Elementos
+     */
+    public function setDescripcionExtra($descripcionExtra)
+    {
+        $this->descripcionExtra = $descripcionExtra;
+
+        return $this;
+    }
+
+    /**
+     * Get descripcionExtra
+     *
+     * @return string 
+     */
+    public function getDescripcionExtra()
+    {
+        return $this->descripcionExtra;
+    }
+
+    /**
+     * Set fechaAlta
+     *
+     * @param \DateTime $fechaAlta
+     * @return Elementos
+     */
+    public function setFechaAlta($fechaAlta)
+    {
+        $this->fechaAlta = $fechaAlta;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaAlta
+     *
+     * @return \DateTime 
+     */
+    public function getFechaAlta()
+    {
+        return $this->fechaAlta;
+    }
+
+    /**
+     * Set fechaBaja
+     *
+     * @param \DateTime $fechaBaja
+     * @return Elementos
+     */
+    public function setFechaBaja($fechaBaja)
+    {
+        $this->fechaBaja = $fechaBaja;
+
+        return $this;
+    }
+
+    /**
+     * Get fechaBaja
+     *
+     * @return \DateTime 
+     */
+    public function getFechaBaja()
+    {
+        return $this->fechaBaja;
+    }
+
+    /**
+     * Set motivoBaja
+     *
+     * @param string $motivoBaja
+     * @return Elementos
+     */
+    public function setMotivoBaja($motivoBaja)
+    {
+        $this->motivoBaja = $motivoBaja;
+
+        return $this;
+    }
+
+    /**
+     * Get motivoBaja
+     *
+     * @return string 
+     */
+    public function getMotivoBaja()
+    {
+        return $this->motivoBaja;
+    }
+
+    /**
+     * Set espacios
+     *
+     * @param \AppBundle\Entity\Espacios $espacios
+     * @return Elementos
+     */
+    public function setEspacios(\AppBundle\Entity\Espacios $espacios = null)
+    {
+        $this->espacios = $espacios;
+
+        return $this;
+    }
+
+    /**
+     * Get espacios
+     *
+     * @return \AppBundle\Entity\Espacios 
+     */
+    public function getEspacios()
+    {
+        return $this->espacios;
+    }
+
+    /**
+     * Set estados
+     *
+     * @param \AppBundle\Entity\Estados $estados
+     * @return Elementos
+     */
+    public function setEstados(\AppBundle\Entity\Estados $estados = null)
+    {
+        $this->estados = $estados;
+
+        return $this;
+    }
+
+    /**
+     * Get estados
+     *
+     * @return \AppBundle\Entity\Estados 
+     */
+    public function getEstados()
+    {
+        return $this->estados;
+    }
+
+    /**
+     * Set tipoElementos
+     *
+     * @param \AppBundle\Entity\TipoElementos $tipoElementos
+     * @return Elementos
+     */
+    public function setTipoElementos(\AppBundle\Entity\TipoElementos $tipoElementos = null)
+    {
+        $this->tipoElementos = $tipoElementos;
+
+        return $this;
+    }
+
+    /**
+     * Get tipoElementos
+     *
+     * @return \AppBundle\Entity\TipoElementos 
+     */
+    public function getTipoElementos()
+    {
+        return $this->tipoElementos;
+    }
+}

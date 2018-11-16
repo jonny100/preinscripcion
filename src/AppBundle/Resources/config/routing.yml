@@ -1,0 +1,6 @@
+#app_main_homepage:
+#    pattern:  /index
+#    defaults: { _controller: AppBundle:Default:index }
+#app_main_indexpage:
+#    pattern:  /hello/{name}
+#    defaults: { _controller: AppBundle:Default:index }

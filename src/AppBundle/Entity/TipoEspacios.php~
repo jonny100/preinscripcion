@@ -1,0 +1,32 @@
+<?php
+
+namespace AppBundle\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * TipoEspacios
+ *
+ * @ORM\Table(name="tipo_espacios")
+ * @ORM\Entity
+ */
+class TipoEspacios
+{
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="descripcion", type="string", length=200, nullable=false)
+     */
+    private $descripcion;
+
+
+}
