@@ -127,7 +127,7 @@ class PreinscriptosAdmin extends AbstractAdmin
             ->add('fechaNac', 'sonata_type_datetime_picker', array('format'=>'dd/MM/yyyy', 'required' => false))
             ->add('paises',null, array('label'=>'País'))
             ->add('provincias',null, array('label'=>'Provincia'))
-            ->add('localidad')
+            ->add('localidad',null, array('label'=>'Localidad'))
             ->add('domicilio')
             ->add('profesion')
             ->add('estudiosAlcanzados')
