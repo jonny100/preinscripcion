@@ -131,7 +131,7 @@ class PreinscriptosAdmin extends AbstractAdmin
             ->add('domicilio')
             ->add('profesion')
             ->add('estudiosAlcanzados')
-            ->add('tipoFinalizacionEstudiosAlcanzados')
+            ->add('tipoFinalizacionEstudiosAlcanzados', null, array('label' => 'Tipo de Finalizacion de Estudios Alcanzados'))
             ->add('recaptcha', 'pv_recaptcha', array(
                 'label' => 'Verificación',
                 'mapped' => false,
